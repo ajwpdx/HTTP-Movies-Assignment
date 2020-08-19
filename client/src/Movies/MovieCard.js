@@ -1,9 +1,22 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 
 const MovieCard = props => {
-  const { title, director, metascore, stars } = props.movie;
+  const history = useHistory()
+
+  const { title, director, metascore, stars } = props.movie; 
+
+  const navigateToMovie = (e) => {
+    
+    history.push(`/movies/${0}`)}
+
+  const clickEdit = (e) => {
+    e.stopPropagation()
+    history.push(`/update-movie/${0}`) 
+  }
+
   return (
-    <div className="movie-card">
+    <div className="movie-card" onClick={navigateToMovie}>
       <h2>{title}</h2>
       <div className="movie-director">
         Director: <em>{director}</em>
@@ -18,6 +31,12 @@ const MovieCard = props => {
           {star}
         </div>
       ))}
+      <button 
+      className='edit-button'
+      onClick={clickEdit}
+      >
+      Edit
+      </button>
     </div>
   );
 };
