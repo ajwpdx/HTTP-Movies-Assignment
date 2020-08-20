@@ -4,6 +4,7 @@ import axios from 'axios'
 import MovieList from './MovieList'
 
 const initialFormValues = {
+    title:'',
     director: '',
     metascore: 0,
     star1: '',

@@ -1,5 +1,7 @@
-import React, { useState } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
+
+import axios from 'axios'
 
 const initialFormValues = {
     title:'',
@@ -7,14 +9,14 @@ const initialFormValues = {
     metascore: '',
     star1: '',
     star2: '',
-    star3: ''
+    star3: '',
+    id: Math.floor(Math.random()*1000) 
 }
 
 const AddMovie = (props) => {
 
     const [formValues, setFormValues] = useState(initialFormValues)
     const history = useHistory()
-    const { id } = useParams()
 
     const changeHandler = e => {
         const value = e.target.value
@@ -24,11 +26,29 @@ const AddMovie = (props) => {
             ...formValues,
             [name]: value,
         });
+        
     }
 
     const handleSubmit = e => {
         e.preventDefault()
-        console.log('submit')
+
+        const newMovie = {
+            id: formValues.id,
+            title: formValues.title,
+            director: formValues.director,
+            metascore: formValues.metascore,
+            stars: [formValues.star1, formValues.star2, formValues.star3]
+        }
+
+        axios
+        .post(`http://localhost:5000/api/movies/`, newMovie)
+        .then( res => {
+            console.log('posted', res)
+            props.setMovieList([newMovie,...props.newList ])
+            history.push(`/`)
+        })
+        .catch(err => console.log(err))
+        
     }
 
     return (
@@ -76,7 +96,7 @@ const AddMovie = (props) => {
                     value={formValues.star3}
                 />
 
-                <button>Update</button>
+                <button>Add</button>
             </form>
         </div>
     )
