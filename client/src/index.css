@@ -101,3 +101,8 @@ button {
   border:none;
   color: darkgreen
 }
+
+.navigation {
+  display: flex;
+  justify-content: center;
+}

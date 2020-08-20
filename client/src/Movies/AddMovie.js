@@ -1,42 +1,20 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import axios from 'axios'
-import MovieList from './MovieList'
 
 const initialFormValues = {
+    title:'',
     director: '',
-    metascore: 0,
+    metascore: '',
     star1: '',
     star2: '',
     star3: ''
 }
 
-const UpdateMovie = (props) => {
+const AddMovie = (props) => {
 
     const [formValues, setFormValues] = useState(initialFormValues)
     const history = useHistory()
     const { id } = useParams()
-
-    useEffect(() => {
-        axios
-            .get(`http://localhost:5000/api/movies/${id}`)
-            .then ( res => {
-                console.log(res.data)
-                setFormValues({
-                    id: parseInt(res.data.id),
-                    title: res.data.title,
-                    director: res.data.director,
-                    metascore: parseInt(res.data.metascore),
-                    star1: res.data.stars[0],
-                    star2: res.data.stars[1],
-                    star3: res.data.stars[2]
-                })
-                console.log(formValues)
-            })
-            .catch(err => {
-                console.log(err)
-            })
-    }, [id])
 
     const changeHandler = e => {
         const value = e.target.value
@@ -50,33 +28,19 @@ const UpdateMovie = (props) => {
 
     const handleSubmit = e => {
         e.preventDefault()
-        const updatedMovie = {
-            id: formValues.id,
-            title: formValues.title,
-            director: formValues.director,
-            metascore: formValues.metascore,
-            stars: [formValues.star1, formValues.star2, formValues.star3]
-        }
-        console.log(updatedMovie)
-        axios
-            .put(`http://localhost:5000/api/movies/${id}`, updatedMovie)
-            .then( res => {
-                const newList = props.movies.filter((mov) => {
-                    console.log(id)
-                    console.log(mov.id)
-                    return updatedMovie.id !== mov.id
-                })
-                props.setMovieList([updatedMovie,...newList ])
-                history.push(`/movies/${id}`)
-                
-            })
-            .catch(err => console.log(err))
+        console.log('submit')
     }
 
     return (
         <div>
             <form className="movie-card" onSubmit ={handleSubmit}>
-                <h2></h2>
+                <h3>Title</h3>
+                <input
+                    type="string"
+                    name="title"
+                    onChange={changeHandler}
+                    value={formValues.title}
+                />
                 <h3>Director</h3>
                 <input
                     type="string"
@@ -86,7 +50,7 @@ const UpdateMovie = (props) => {
                 />
                 <h3>Metascore</h3>
                 <input
-                    type="number"
+                    type="string"
                     name="metascore"
                     onChange={changeHandler}
                     value={formValues.metascore} />
@@ -118,4 +82,4 @@ const UpdateMovie = (props) => {
     )
 }
 
-export default UpdateMovie
+export default AddMovie
